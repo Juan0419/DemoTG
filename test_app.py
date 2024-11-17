@@ -74,6 +74,21 @@ class FlaskTestCase(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json, {'error': 'Unauthorized'})
-        
+
+    # Prueba de métodos permitidos
+    def test_allowed_methods(self):
+        for method in ['GET', 'POST', 'PUT', 'DELETE']:
+            with self.subTest(method=method):
+                response = self.client.open(
+                    '/animals-json',
+                    method=method,
+                    headers={
+                        'x-api-key': 'your_secret_api_key',
+                        'Origin': 'http://example.com'
+                    }
+                )
+                self.assertIn(response.status_code, [200, 405])
+
+
 if __name__ == '__main__':
     unittest.main()
